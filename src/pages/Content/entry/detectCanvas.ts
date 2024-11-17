@@ -106,8 +106,7 @@ function createSidebarWhenListview() {
 // only on assignments page
 function createSidebarWhenAssignments() {
   const path = window.location.pathname.split('/');
-  const onAssignmentsPage =
-    path.length >= 4 && path[path.length - 2] === 'assignments';
+  const onAssignmentsPage = path.length >= 4;
 
   const rightSideWrapper = document.getElementById('right-side-wrapper');
   const rightSide = document.getElementById('right-side');

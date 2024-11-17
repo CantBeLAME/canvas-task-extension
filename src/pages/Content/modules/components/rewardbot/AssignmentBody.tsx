@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { getAssignmentsRequest } from '../../hooks/useAssignments';
 // import { Assignment } from '../../types';
 import { SubtitleText, TitleText } from '../radial-bar-chart/example';
+import { AssignmentType } from '../../types';
 
 const TitleDiv = styled.div<DarkProps>`
   ${(props) =>
@@ -24,15 +25,18 @@ export interface HeaderProps {
   dark?: boolean;
 }
 
+const typeMap: Record<string, AssignmentType> = {
+  assignments: AssignmentType.ASSIGNMENT,
+  quizzes: AssignmentType.QUIZ,
+  discussion_topics: AssignmentType.DISCUSSION,
+};
+
 async function getAssignments() {
   const path = window.location.pathname.split('/');
   const course_id = path.length >= 3 && path[1] === 'courses' ? path[2] : null;
-  const assigment_id =
-    path.length >= 5 && path[3] === 'assignments' ? path[4] : null;
-  // console.log("OUTTTT", course_id, assigment_id, path)
+  const assigment_id = path.length >= 5 ? path[4] : null;
   if (course_id && assigment_id) {
-    // console.log("INNNN")
-    return await getAssignmentsRequest(course_id, assigment_id);
+    return await getAssignmentsRequest(course_id, assigment_id, typeMap[path[3]]);
   }
   return null;
 }
@@ -46,14 +50,13 @@ export default function AssignmentBody({ dark }: HeaderProps): JSX.Element {
 
   useEffect(() => {
     getAssignments().then((res) => {
-      console.log('assigment', res);
       setDays(
         Math.floor(
           (new Date(res?.due_at ?? '').getTime() - Date.now()) /
             (1000 * 60 * 60 * 24)
         )
       );
-      setSubmitted(res?.has_submitted_submissions ?? false);
+      setSubmitted(res?.submitted ?? false);
       setCanSubmit(res?.can_submit ?? false);
       setHasSummisionTypes(
         (res?.submission_types?.length === 1 &&
@@ -77,14 +80,14 @@ export default function AssignmentBody({ dark }: HeaderProps): JSX.Element {
         subtitle: 'You have already submitted this assignment.',
       };
     }
-    if (!canSubmit) {
-      return {
-        title: 'Assignment not available',
-        subtitle:
-          'Don’t worry, every effort helps you grow! You’ll do even better next time!',
-      };
-    }
     if (days < 0) {
+      if (!canSubmit) {
+        return {
+          title: 'Assignment not available',
+          subtitle:
+            'Don’t worry, every effort helps you grow! You’ll do even better next time!',
+        };
+      }
       return {
         title: 'Due date passed',
         subtitle:
