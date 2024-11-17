@@ -21,6 +21,7 @@ import loadGradescopeAssignments, {
   isDuplicateAssignment,
 } from './utils/loadGradescope';
 import { UseAssignmentsHookInterface } from '../types/config';
+import { Assignment } from '../types/assignment';
 
 const parseLinkHeader = (link: string) => {
   const re = /<([^>]+)>; rel="([^"]+)"/g;
@@ -66,10 +67,24 @@ async function getAllAssignmentsRequest(
   allPages = true
 ): Promise<PlannerAssignment[]> {
   // assumption: this request will succeed, otherwise we should throw a fatal error and not load
+
   const initialURL = `${baseURL()}/api/v1/planner/items?start_date=${start}${
     end ? '&end_date=' + end : ''
   }&per_page=1000`;
   return await getPaginatedRequest<PlannerAssignment>(initialURL, allPages);
+}
+
+/* Get assignments from api */
+export async function getAssignmentsRequest(
+  course_id: string,
+  assignment_id: string
+): Promise<Assignment> {
+  // assumption: this request will succeed, otherwise we should throw a fatal error and not load
+
+  const url = `${baseURL()}/api/v1/courses/${course_id}/assignments/${assignment_id}`;
+
+  const res = await axios.get(url);
+  return res.data;
 }
 
 function isValidDate(datestr: string): boolean {

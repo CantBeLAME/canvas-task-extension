@@ -5,9 +5,10 @@ import ContentLoader from './content-loader';
 import getPeriod from '../utils/getPeriod';
 import { useOptionsStore } from '../hooks/useOptions';
 import { OptionsContext } from '../contexts/contexts';
-import { Options } from '../types';
 import { LMSConfig } from '../types/config';
 import { CanvasLMSConfig } from '../../entry/runInCanvas';
+import { AssignmentBody, Robot } from './rewardbot';
+import { Options } from '../types';
 
 const AppContainer = styled.div`
   display: flex;
@@ -88,6 +89,19 @@ export default function App({
           startDate={start}
         />
       </OptionsContext.Provider>
+    </AppContainer>
+  );
+}
+
+export function AppAssignments({
+  options,
+  lms = CanvasLMSConfig,
+  MIN_LOAD_TIME = 350,
+}: AppProps): JSX.Element {
+  return (
+    <AppContainer id="tfc-wall-sina">
+      <Robot />
+      <AssignmentBody dark={options.dark_mode} />
     </AppContainer>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
+import App, { AppAssignments } from './components/App';
 import { Options } from './types';
 import { LMSConfig } from './types/config';
 
@@ -21,5 +21,18 @@ export default function runApp(
   );
   console.log(
     'Tasks for Canvas: Check out the repo! https://github.com/jtcheng26/canvas-task-extension'
+  );
+}
+
+export function runAppForAssigments(
+  container: HTMLElement,
+  lms: LMSConfig,
+  data: Options
+): void {
+  ReactDOM.render(
+    <React.StrictMode>
+      <AppAssignments lms={lms} options={data} />
+    </React.StrictMode>,
+    container
   );
 }

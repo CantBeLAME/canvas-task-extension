@@ -1,4 +1,5 @@
 import { createSidebar } from './runInCanvas';
+import { createAssignmentSidebar } from './runInCanvasAssignments';
 
 export const isCanvas = document
   .getElementById('application')
@@ -123,7 +124,7 @@ function createSidebarWhenAssignments() {
     rightSideWrapper.style.overflowY = 'scroll';
     rightSideWrapper.style.height = '100vh';
     rightSideWrapper.classList.add('tfc-list-view-wrapper');
-    createSidebar(rightSide);
+    createAssignmentSidebar(rightSide);
     return true;
   }
 }

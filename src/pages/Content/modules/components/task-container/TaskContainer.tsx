@@ -18,7 +18,7 @@ import { useNewCourseStore } from '../../hooks/useCourseStore';
 import { useExperiments } from '../../hooks/useExperiment';
 import { useNewAssignmentStore } from '../../hooks/useAssignmentStore';
 import { LMSConfig } from '../../types/config';
-import Bot from '../rewardbot';
+import ChartBot from '../rewardbot';
 
 export interface TaskContainerProps {
   assignments: FinalAssignment[];
@@ -148,7 +148,7 @@ function TaskContainer({
       <LMSContext.Provider value={lms}>
         <CourseStoreContext.Provider value={courseStore}>
           <ExperimentsContext.Provider value={exp}>
-            <Bot
+            <ChartBot
               assignments={chartAssignments}
               colorOverride={
                 courseId && chartCourses[0] in courseStore.state

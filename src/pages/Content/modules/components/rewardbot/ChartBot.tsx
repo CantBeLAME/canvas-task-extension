@@ -9,7 +9,7 @@ import useCourseStore from '../../hooks/useCourseStore';
 import { ChartData } from '../radial-bar-chart';
 import { SubtitleText, TitleText } from '../radial-bar-chart/example';
 
-export interface BotProps {
+export interface ChartBotProps {
   assignments: FinalAssignment[];
   courses: string[];
   colorOverride?: string;
@@ -48,19 +48,15 @@ const TextWrapper = styled.div`
   margin: 0 auto; 
 `;
 
-// Define the Thumbnail component
-export default function Bot({
+export default function ChartBot({
   assignments,
   courses,
   colorOverride,
   loading,
-  onCoursePage,
   selectedCourseId = '',
-  setCourse,
-  showConfetti = true,
   themeColor = OptionsDefaults.theme_color,
   weekKey = '',
-}: BotProps): JSX.Element {
+}: ChartBotProps): JSX.Element {
   const courseStore = useCourseStore();
   /* useMemo so it doesn't animate the bars when switching courses. */
   const [chartData, setChartData] = useState<ChartData>({

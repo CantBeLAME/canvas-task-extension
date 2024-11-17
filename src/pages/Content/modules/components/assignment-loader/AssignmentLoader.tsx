@@ -7,7 +7,7 @@ import ErrorRender from '../error/ErrorRender';
 import { LMSConfig } from '../../types/config';
 import Thumbnail from '../rewardbot/ChartBot';
 
-interface ContentLoaderProps {
+interface AssignmentLoaderProps {
   clickable: boolean;
   firstLoad: boolean;
   options: Options;
@@ -22,7 +22,7 @@ interface ContentLoaderProps {
   utility component that fetches async data and re-renders content when necessary
 */
 
-function ContentLoader({
+function AssignmentLoader({
   clickable,
   firstLoad,
   options,
@@ -31,7 +31,7 @@ function ContentLoader({
   loadedCallback,
   MIN_LOAD_TIME = 350,
   lms,
-}: ContentLoaderProps): JSX.Element {
+}: AssignmentLoaderProps): JSX.Element {
   const {
     data: plannerData,
     isError: assignmentsError,
@@ -168,10 +168,10 @@ function ContentLoader({
   compareProps function so content is re-rendered properly when prev and next buttons clicked
 */
 function compareProps(
-  prevProps: ContentLoaderProps,
-  nextProps: ContentLoaderProps
+  prevProps: AssignmentLoaderProps,
+  nextProps: AssignmentLoaderProps
 ) {
   return prevProps.clickable == nextProps.clickable;
 }
 
-export default React.memo(ContentLoader, compareProps);
+export default React.memo(AssignmentLoader, compareProps);
