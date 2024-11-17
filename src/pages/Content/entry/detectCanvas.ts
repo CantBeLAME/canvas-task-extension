@@ -31,8 +31,8 @@ function createSidebarWhenCanvasReady() {
     });
 
     /*
-  in case the element is already loaded and not caught by mutation observer
-*/
+    in case the element is already loaded and not caught by mutation observer
+    */
     const containerList = document.getElementsByClassName(
       'Sidebar__TodoListContainer'
     );
@@ -45,9 +45,9 @@ function createSidebarWhenCanvasReady() {
       containerList?.length > 0 ||
       teacherContainerList?.length > 0 ||
       comingUpList?.length > 0
-    )
+    ) {
       createSidebar(rightSide);
-    else if (rightSide) {
+    } else if (rightSide) {
       observer.observe(rightSide as Node, {
         childList: true,
       });
@@ -102,7 +102,34 @@ function createSidebarWhenListview() {
   }
 }
 
+// only on assignments page
+function createSidebarWhenAssignments() {
+  const path = window.location.pathname.split('/');
+  const onAssignmentsPage =
+    path.length >= 4 && path[path.length - 2] === 'assignments';
+
+  const rightSideWrapper = document.getElementById('right-side-wrapper');
+  const rightSide = document.getElementById('right-side');
+
+  if (
+    onAssignmentsPage &&
+    rightSide &&
+    rightSideWrapper?.style.display === ''
+  ) {
+    rightSideWrapper.style.display = 'block';
+    /* Fix sidebar while scrolling vertically */
+    rightSideWrapper.style.position = 'sticky';
+    rightSideWrapper.style.top = '0px';
+    rightSideWrapper.style.overflowY = 'scroll';
+    rightSideWrapper.style.height = '100vh';
+    rightSideWrapper.classList.add('tfc-list-view-wrapper');
+    createSidebar(rightSide);
+    return true;
+  }
+}
+
 export function CanvasEntryPoint(): void {
   createSidebarWhenCanvasReady();
   createSidebarWhenListview();
+  createSidebarWhenAssignments();
 }
