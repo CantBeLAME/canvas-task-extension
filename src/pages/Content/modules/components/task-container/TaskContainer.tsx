@@ -18,6 +18,7 @@ import { useNewCourseStore } from '../../hooks/useCourseStore';
 import { useExperiments } from '../../hooks/useExperiment';
 import { useNewAssignmentStore } from '../../hooks/useAssignmentStore';
 import { LMSConfig } from '../../types/config';
+import Bot from '../rewardbot';
 
 export interface TaskContainerProps {
   assignments: FinalAssignment[];
@@ -147,6 +148,22 @@ function TaskContainer({
       <LMSContext.Provider value={lms}>
         <CourseStoreContext.Provider value={courseStore}>
           <ExperimentsContext.Provider value={exp}>
+            <Bot
+              assignments={chartAssignments}
+              colorOverride={
+                courseId && chartCourses[0] in courseStore.state
+                  ? courseStore.state[chartCourses[0]].color
+                  : undefined
+              }
+              courses={chartCourses}
+              loading={loading}
+              onCoursePage={!!courseId}
+              selectedCourseId={chosenCourseId}
+              setCourse={setSelectedCourseId}
+              showConfetti={options.show_confetti}
+              themeColor={themeColor}
+              weekKey={weekKey}
+            />
             <CourseDropdown
               choices={courseStore.getCourseList(chartCourses)}
               onCoursePage={!!courseId}

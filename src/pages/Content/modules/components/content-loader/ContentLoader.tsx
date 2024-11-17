@@ -5,6 +5,7 @@ import onCoursePage from '../../utils/onCoursePage';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorRender from '../error/ErrorRender';
 import { LMSConfig } from '../../types/config';
+import Thumbnail from '../rewardbot/Bot';
 
 interface ContentLoaderProps {
   clickable: boolean;
