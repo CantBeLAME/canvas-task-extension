@@ -86,7 +86,7 @@ export async function getAssignmentsRequest(
       id: obj.id ?? 0,
       type: type,
       name: obj.title,
-      submitted: obj.submissions ? obj.submissions.submitted : undefined,
+      submitted: obj.has_submitted_submissions,
       description: obj.description ?? '',
       created_at: new Date(obj.created_at ?? ''),
       due_at: new Date(obj.due_at ?? ''),
@@ -96,7 +96,7 @@ export async function getAssignmentsRequest(
       marked_complete: obj.marked_complete ?? false,
       submission_types: obj.submission_types ?? [],
       discussion_topic: obj.discussion_topic ?? false,
-      can_submit: (obj.can_submit || obj.allowed_attemps != 0)?? false,
+      can_submit: (obj.can_submit || obj.allowed_attemps != 0) ?? false,
       has_submitted_submissions: obj.has_submitted_submissions ?? false,
     };
     return converted;
@@ -108,18 +108,17 @@ export async function getAssignmentsRequest(
     const quiz = res.data;
 
     return convertAssignment(quiz);
-  }
-  else if (type === AssignmentType.DISCUSSION) {
+  } else if (type === AssignmentType.DISCUSSION) {
     const url = `${baseURL()}/api/v1/courses/${course_id}/discussion_topics/${assignment_id}`;
     const res = await axios.get(url);
     const discussion = res.data;
     assignment_id = discussion.assignment_id;
   }
-
+  console.log(assignment_id, "workign")
   const url = `${baseURL()}/api/v1/courses/${course_id}/assignments/${assignment_id}`;
-
   const res = await axios.get(url);
   const assignment = res.data;
+  console.log(baseURL())
 
   return convertAssignment(assignment);
 }

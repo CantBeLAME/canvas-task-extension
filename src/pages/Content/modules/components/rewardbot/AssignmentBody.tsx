@@ -64,6 +64,7 @@ export default function AssignmentBody({ dark }: HeaderProps): JSX.Element {
           false
       );
     });
+    
   }, []);
 
   const message: () => { title: string; subtitle: string } = () => {
