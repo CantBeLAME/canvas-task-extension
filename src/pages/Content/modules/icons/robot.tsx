@@ -10,7 +10,7 @@ const RobotIcon: React.FC = () => (
     y="0px"
     width="50%"
     viewBox="0 0 256 256"
-    enableBackground="new 0 0 256 256" 
+    enableBackground="new 0 0 256 256"
     xmlSpace="preserve"
   >
     <path

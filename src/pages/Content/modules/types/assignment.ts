@@ -136,7 +136,7 @@ interface Submission {
   course_id: number;
   assignment_id: number;
   type: AssignmentType | 'none';
-  submitted: boolean; 
+  submitted: boolean;
   late: boolean;
   missing: boolean;
   due_at: string;
@@ -167,5 +167,5 @@ export {
   AssignmentType,
   AssignmentStatus,
   Assignment,
-  Submission
+  Submission,
 };

@@ -1,12 +1,12 @@
 {
-  "name": "canvas-task-extension",
+  "name": "reward-bot",
   "version": "1.3.8",
   "description": "A chrome extension that improves the Canvas LMS To Do sidebar!",
   "homepage": "https://github.com/jtcheng26/canvas-task-extension",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jtcheng26/canvas-task-extension.git"
+    "url": "https://https://github.com/CantBeLAME/canvas-task-extension.git"
   },
   "engines": {
     "npm": ">=8.0.0",

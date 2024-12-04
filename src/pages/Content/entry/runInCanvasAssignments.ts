@@ -1,4 +1,4 @@
-import { runAppForAssigments} from '../modules';
+import { runAppForAssigments } from '../modules';
 import { getOptions } from '../modules/hooks/useOptions';
 import { Options } from '../modules/types';
 import { LMSConfig } from '../modules/types/config';

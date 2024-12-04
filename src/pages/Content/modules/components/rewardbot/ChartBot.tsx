@@ -98,8 +98,6 @@ export default function ChartBot({
     [selectedCourseId, chartData]
   );
 
-
-
   return (
     <Wrapper>
       <RobotIcon />
