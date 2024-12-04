@@ -7,9 +7,11 @@ import {
   NeedsGradingIcon,
 } from '../icons';
 import GradescopeIcon from '../icons/gradescope';
-import { AssignmentType, FinalAssignment, Options } from '../types';
+import { AssignmentType, FinalAssignment, Options, Submission } from '../types';
+
 import JSONAssignmentDefaults from './defaults/assignmentDefaults.json';
 import JSONOptionsDefaults from './defaults/optionsDefaults.json';
+import JSONSubmissionDefaults from './defaults/submissonDefaults.json';
 
 export const MAX_MARKED_ASSIGNMENTS = 400;
 
@@ -27,6 +29,7 @@ export const ASSIGNMENT_ICON: Record<AssignmentType | 'ungraded', JSX.Element> =
 
 export const AssignmentDefaults = JSONAssignmentDefaults as FinalAssignment;
 export const OptionsDefaults = JSONOptionsDefaults as Options;
+export const SubmissionDefaults = JSONSubmissionDefaults as Submission;
 
 // export const THEME_COLOR = '#ec412d';
 export const THEME_COLOR = 'var(--ic-brand-global-nav-bgd)';

@@ -106,8 +106,11 @@ function createSidebarWhenListview() {
 // only on assignments page
 function createSidebarWhenAssignments() {
   const path = window.location.pathname.split('/');
-  const onAssignmentsPage = path.length >= 5;
-  
+  const onAssignmentsPage =
+    path.length == 5 &&
+    (path[3] === 'assignments' ||
+      path[3] === 'quizzes' ||
+      path[3] === 'discussion_topics');
 
   const rightSideWrapper = document.getElementById('right-side-wrapper');
   const rightSide = document.getElementById('right-side');

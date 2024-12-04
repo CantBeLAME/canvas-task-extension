@@ -5,13 +5,13 @@ import { getAssignmentsRequest } from '../../hooks/useAssignments';
 // import { Assignment } from '../../types';
 import { SubtitleText, TitleText } from '../radial-bar-chart/example';
 import { AssignmentType } from '../../types';
+import { Submission } from '../../types/assignment';
 
 const TitleDiv = styled.div<DarkProps>`
   ${(props) =>
     props.dark ? 'var(--tfc-dark-mode-text-secondary)' : 'rgb(199, 205, 209)'};
   color: ${(props) =>
     props.dark ? 'var(--tfc-dark-mode-text-primary)' : 'inherit'};
-  height: 30px;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -36,74 +36,93 @@ async function getAssignments() {
   const course_id = path.length >= 3 && path[1] === 'courses' ? path[2] : null;
   const assigment_id = path.length >= 5 ? path[4] : null;
   if (course_id && assigment_id) {
-    return await getAssignmentsRequest(course_id, assigment_id, typeMap[path[3]]);
+    return await getAssignmentsRequest(
+      course_id,
+      assigment_id,
+      typeMap[path[3]]
+    );
   }
-  return null;
+  return undefined;
 }
 
 export default function AssignmentBody({ dark }: HeaderProps): JSX.Element {
   const [days, setDays] = useState<number>(0);
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const [canSubmit, setCanSubmit] = useState<boolean>(false);
-  const [hasSummisionTypes, setHasSummisionTypes] = useState<boolean>(false);
-  // const []
+  const [submission, setSubmission] = useState<Submission | null>(null);
 
   useEffect(() => {
-    getAssignments().then((res) => {
-      setDays(
-        Math.floor(
-          (new Date(res?.due_at ?? '').getTime() - Date.now()) /
-            (1000 * 60 * 60 * 24)
-        )
-      );
-      setSubmitted(res?.submitted ?? false);
-      setCanSubmit(res?.can_submit ?? false);
-      setHasSummisionTypes(
-        (res?.submission_types?.length === 1 &&
-          res?.submission_types[0] === 'none') ??
-          false
-      );
-    });
-    
+    const result = getAssignments();
+    if (result) {
+      result.then((res) => {
+        setDays(
+          Math.floor(
+            (new Date(res?.due_at ?? '').getTime() - Date.now()) /
+              (1000 * 60 * 60 * 24)
+          )
+        );
+        setSubmission(res ?? null);
+      });
+    }
   }, []);
 
-  const message: () => { title: string; subtitle: string } = () => {
-    if (hasSummisionTypes) {
-      return {
-        title: 'No submission required',
-        subtitle: 'This assignment does not require any submission.',
-      };
-    }
+  if (!submission) {
+    return <></>;
+  } else if (submission === undefined) {
+    return (
+      <TitleDiv dark={dark}>
+        <TitleText>Loading...</TitleText>
+      </TitleDiv>
+    );
+  }
 
-    if (submitted) {
+  const message: () => { title: string; subtitle: string } = () => {
+    if (submission.missing) {
       return {
-        title: 'Congratulations',
-        subtitle: 'You have already submitted this assignment.',
+        title: 'Assignment missing',
+        subtitle: 'You have not submitted this assignment yet.',
       };
-    }
-    if (days < 0) {
-      if (!canSubmit) {
+    } else if (submission.submitted) {
+      const submittedDate = new Date(submission.submitted_at ?? '');
+      const dueDate = new Date(submission.due_at ?? '');
+      const earlyDays = Math.floor(
+        (dueDate.getTime() - submittedDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+
+      if (earlyDays > 0) {
         return {
-          title: 'Assignment not available',
-          subtitle:
-            'Don’t worry, every effort helps you grow! You’ll do even better next time!',
+          title: 'Congratulations',
+          subtitle: `You submitted ${earlyDays} day${
+            earlyDays > 1 ? 's' : ''
+          } early.`,
+        };
+      } else {
+        return {
+          title: 'Congratulations',
+          subtitle: 'You have already submitted this assignment.',
         };
       }
+    } else if (isNaN(days)) {
       return {
-        title: 'Due date passed',
-        subtitle:
-          "Assignment is overdue. But don't worry, you can still submit it.",
-      };
-    } else if (days === 0) {
-      return {
-        title: 'Due today',
-        subtitle: "Submit your assignment to earn you're rewards.",
+        title: 'No due date',
+        subtitle: 'This assignment does not have a due date.',
       };
     } else {
-      return {
-        title: `Due in ${days} days`,
-        subtitle: 'Ready to submit? You are early!!',
-      };
+      if (days < 0) {
+        return {
+          title: 'Due date passed',
+          subtitle:
+            "Assignment is overdue. But don't worry, you can still submit it.",
+        };
+      } else if (days === 0) {
+        return {
+          title: 'Due today',
+          subtitle: "Submit your assignment to earn you're rewards.",
+        };
+      } else {
+        return {
+          title: `Due in ${days} day${days > 1 ? 's' : ''}`,
+          subtitle: 'Ready to submit? You are early!!',
+        };
+      }
     }
   };
 

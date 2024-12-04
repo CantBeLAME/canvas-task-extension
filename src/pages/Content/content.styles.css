@@ -10,9 +10,18 @@
   display: none;
 }
 
-#tfc-wall-rose {
+#tfc-wall-rose,#tfc-wall-dazy {
   position: relative;
 }
+#tfc-wall-dazy {
+  display: flex;
+  flex-direction: column;
+
+}
+#tfc-wall-lily{
+  margin-bottom: 20px;
+}
+
 
 @media only screen and (min-width: 992px) {
   .tfc-list-view-wrapper #tfc-wall-rose {

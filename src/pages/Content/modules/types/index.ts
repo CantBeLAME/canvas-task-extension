@@ -3,6 +3,7 @@ import {
   FinalAssignment,
   PlannerAssignment,
   AssignmentType,
+  Submission,
 } from './assignment';
 import UserData from './userData';
 import Options, { Period } from './options';
@@ -23,4 +24,5 @@ export {
   Options,
   Period,
   Direction,
+  Submission,
 };

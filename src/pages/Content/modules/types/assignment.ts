@@ -129,6 +129,19 @@ interface Assignment {
   marked_complete: boolean; // marked complete in the sidebar or through the planner
   can_submit: boolean;
 }
+
+interface Submission {
+  id: number;
+  user_id: number;
+  course_id: number;
+  assignment_id: number;
+  type: AssignmentType | 'none';
+  submitted: boolean; 
+  late: boolean;
+  missing: boolean;
+  due_at: string;
+  submitted_at: string | null;
+}
 // possible values from plannable_type field
 enum AssignmentType {
   ASSIGNMENT = 'assignment',
@@ -154,4 +167,5 @@ export {
   AssignmentType,
   AssignmentStatus,
   Assignment,
+  Submission
 };

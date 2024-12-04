@@ -99,7 +99,7 @@ export function AppAssignments({
   MIN_LOAD_TIME = 350,
 }: AppProps): JSX.Element {
   return (
-    <AppContainer id="tfc-wall-sina">
+    <AppContainer id="tfc-wall-leaf">
       <Robot />
       <AssignmentBody dark={options.dark_mode} />
     </AppContainer>

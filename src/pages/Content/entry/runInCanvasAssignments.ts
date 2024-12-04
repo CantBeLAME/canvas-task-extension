@@ -30,7 +30,7 @@ function runAppUsingOptions(container: HTMLElement, data: Options) {
       insert new div at top of sidebar to hold content
     */
   const newContainer = document.createElement('div');
-  newContainer.id = 'tfc-wall-rose';
+  newContainer.id = 'tfc-wall-dazy';
   (container.parentNode as Node).insertBefore(newContainer, container);
   /*
       only visually hide sidebar to prevent issues with DOM modification
@@ -66,7 +66,7 @@ export function createAssignmentSidebar(
     const isFirefox = false; // typeof InstallTrigger !== 'undefined'
 
     const outerWall = document.createElement('div');
-    outerWall.id = 'tfc-wall-maria';
+    outerWall.id = 'tfc-wall-lily';
     container.parentElement?.insertBefore(outerWall, container);
 
     if (isFirefox) runAppInFirefox(outerWall);

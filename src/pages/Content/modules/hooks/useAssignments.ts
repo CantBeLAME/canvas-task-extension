@@ -9,7 +9,7 @@ import dashCourses from '../utils/dashCourses';
 import onCoursePage from '../utils/onCoursePage';
 import baseURL from '../utils/baseURL';
 import { DemoAssignments } from '../tests/demo';
-import { AssignmentDefaults } from '../constants';
+import { AssignmentDefaults, SubmissionDefaults } from '../constants';
 import isDemo from '../utils/isDemo';
 import JSONBigInt from 'json-bigint';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import loadGradescopeAssignments, {
   isDuplicateAssignment,
 } from './utils/loadGradescope';
 import { UseAssignmentsHookInterface } from '../types/config';
-import { Assignment } from '../types/assignment';
+import { Assignment, Submission } from '../types/assignment';
 
 const parseLinkHeader = (link: string) => {
   const re = /<([^>]+)>; rel="([^"]+)"/g;
@@ -79,48 +79,96 @@ export async function getAssignmentsRequest(
   course_id: string,
   assignment_id: string,
   type: AssignmentType
-): Promise<Assignment> {
-  // assumption: this request will succeed, otherwise we should throw a fatal error and not load
-  function convertAssignment(obj: any) {
-    const converted: Assignment = {
-      id: obj.id ?? 0,
-      type: type,
-      name: obj.title,
-      submitted: obj.has_submitted_submissions,
-      description: obj.description ?? '',
-      created_at: new Date(obj.created_at ?? ''),
-      due_at: new Date(obj.due_at ?? ''),
-      course_id: obj.course_id ?? 0,
-      html_url: obj.html_url ?? '',
-      points_possible: obj.points_possible ?? 0,
-      marked_complete: obj.marked_complete ?? false,
-      submission_types: obj.submission_types ?? [],
-      discussion_topic: obj.discussion_topic ?? false,
-      can_submit: (obj.can_submit || obj.allowed_attemps != 0) ?? false,
-      has_submitted_submissions: obj.has_submitted_submissions ?? false,
-    };
-    return converted;
+): Promise<Submission> {
+  console.log(
+    'course_id',
+    course_id,
+    'assignment_id',
+    assignment_id,
+    'type',
+    type
+  );
+  const { data: user } = await axios.get(`${baseURL()}/api/v1/users/self`);
+  if (type === AssignmentType.QUIZ) {
+    const { data: quiz } = await axios.get(
+      `${baseURL()}/api/v1/courses/${course_id}/quizzes/${assignment_id}/submissions`
+    );
+    console.log('QUIZ', quiz);
+    return convertSubmission(quiz);
   }
 
-  if (type === AssignmentType.QUIZ) {
-    const url = `${baseURL()}/api/v1/courses/${course_id}/quizzes/${assignment_id}`;
-    const res = await axios.get(url);
-    const quiz = res.data;
-
-    return convertAssignment(quiz);
-  } else if (type === AssignmentType.DISCUSSION) {
-    const url = `${baseURL()}/api/v1/courses/${course_id}/discussion_topics/${assignment_id}`;
-    const res = await axios.get(url);
-    const discussion = res.data;
+  if (type === AssignmentType.DISCUSSION) {
+    const { data: discussion } = await axios.get(
+      `${baseURL()}/api/v1/courses/${course_id}/discussion_topics/${assignment_id}`
+    );
     assignment_id = discussion.assignment_id;
   }
-  console.log(assignment_id, "workign")
-  const url = `${baseURL()}/api/v1/courses/${course_id}/assignments/${assignment_id}`;
-  const res = await axios.get(url);
-  const assignment = res.data;
-  console.log(baseURL())
 
-  return convertAssignment(assignment);
+  const { data: assignment } = await axios.get(
+    `${baseURL()}/api/v1/courses/${course_id}/assignments/${assignment_id}/submissions/${
+      user.id
+    }`
+  );
+  async function convertSubmission(submission: any): Promise<Submission> {
+    try {
+      const converted: Submission = {
+        id:
+          (type === AssignmentType.QUIZ
+            ? submission?.quiz_submissions[0]?.id
+            : submission?.id) ?? 0,
+        user_id: user?.id ?? 0,
+        course_id: Number(course_id ?? 0),
+        assignment_id: Number(assignment_id ?? 0),
+        submitted_at:
+          type === AssignmentType.QUIZ
+            ? submission.quiz_submissions.reduce(
+                (latest: any, current: any) => {
+                  if (!current?.finished_at) return latest;
+                  return new Date(latest?.finished_at) >
+                    new Date(current.finished_at)
+                    ? latest
+                    : current;
+                },
+                null
+              )?.finished_at
+            : submission?.submitted_at ?? null,
+        type: type,
+        submitted:
+          type === AssignmentType.QUIZ
+            ? submission.quiz_submissions.reduce(
+                (latest: boolean, current: any) => {
+                  return current.finished_at ? true : latest;
+                },
+                false
+              )
+            : !!submission?.submitted_at,
+        late: !!submission?.late,
+        missing:
+          submission?.missing ??
+          (type === AssignmentType.QUIZ
+            ? submission.quiz_submissions.reduce(
+                (latest: boolean, current: any) =>
+                  latest || current?.workflow_state === 'untaken',
+                false
+              )
+            : false) ??
+          false,
+        due_at:
+          submission?.cached_due_date ??
+          submission?.due_at ??
+          (type === AssignmentType.QUIZ &&
+          submission.quiz_submissions.length > 0
+            ? submission.quiz_submissions[0]?.end_at
+            : null),
+      };
+
+      return converted;
+    } catch (err) {
+      return SubmissionDefaults;
+    }
+  }
+
+  return convertSubmission(assignment);
 }
 
 function isValidDate(datestr: string): boolean {

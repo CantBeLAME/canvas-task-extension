@@ -1,0 +1,12 @@
+{
+  "id": 0,
+  "user_id": 0,
+  "course_id": 0,
+  "assignment_id": 0,
+  "type": "assignment",
+  "submitted": false,
+  "late": false,
+  "missing": false,
+  "due_at": "2022-01-01T00:00:00Z",
+  "submitted_at": "2022-01-01T00:00:00Z"
+}
