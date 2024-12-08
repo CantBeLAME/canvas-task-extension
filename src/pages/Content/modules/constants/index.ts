@@ -37,8 +37,8 @@ export const THEME_COLOR_LIGHT = 'rgba(199, 205, 209)';
 
 export const CLIENT_ID_LENGTH = 9;
 
-export const HOME_WEBSITE = 'https://www.tasksforcanvas.info';
-export const UNINSTALL_URL = 'https://www.tasksforcanvas.info/uninstall';
-export const INSTALL_URL = 'https://www.tasksforcanvas.info/getting-started';
+export const HOME_WEBSITE = 'http://localhost:3000';
+export const UNINSTALL_URL = 'http://localhost:3000/uninstall';
+export const INSTALL_URL = 'http://localhost:3000/home';
 export const EXPERIMENT_CONFIG_URL =
   'https://canvas-task-static.onrender.com/live.json';
