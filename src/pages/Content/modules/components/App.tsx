@@ -68,16 +68,8 @@ export default function App({
   }
   // options will always be available to children
   return (
-    <AppContainer id="tfc-wall-sina">
+    <AppContainer id="tfc-wall-flower">
       <OptionsContext.Provider value={optionsStore}>
-        <Header
-          clickable={clickableState.clickable}
-          dark={options.dark_mode}
-          onNextClick={onNextClick}
-          onPrevClick={onPrevClick}
-          weekEnd={end}
-          weekStart={start}
-        />
         <ContentLoader
           MIN_LOAD_TIME={MIN_LOAD_TIME}
           clickable={clickableState.clickable}

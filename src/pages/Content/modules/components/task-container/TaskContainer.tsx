@@ -164,39 +164,6 @@ function TaskContainer({
               themeColor={themeColor}
               weekKey={weekKey}
             />
-            <CourseDropdown
-              choices={courseStore.getCourseList(chartCourses)}
-              onCoursePage={!!courseId}
-              selectedId={chosenCourseId}
-              setChoice={setSelectedCourseId}
-            />
-            <TaskChart
-              assignments={chartAssignments}
-              colorOverride={
-                courseId && chartCourses[0] in courseStore.state
-                  ? courseStore.state[chartCourses[0]].color
-                  : undefined
-              }
-              courses={chartCourses}
-              loading={loading}
-              onCoursePage={!!courseId}
-              selectedCourseId={chosenCourseId}
-              setCourse={setSelectedCourseId}
-              showConfetti={options.show_confetti}
-              themeColor={themeColor}
-              weekKey={weekKey}
-            />
-            <TaskList
-              announcements={updatedAnnouncements}
-              assignments={updatedAssignments}
-              createAssignment={createNewAssignment}
-              loading={loading || delayLoad}
-              markAssignment={markAssignmentAs}
-              selectedCourseId={chosenCourseId}
-              showConfetti={options.show_confetti}
-              showDateHeadings={options.due_date_headings}
-              weekKey={weekKey}
-            />
           </ExperimentsContext.Provider>
         </CourseStoreContext.Provider>
       </LMSContext.Provider>
